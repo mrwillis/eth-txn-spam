@@ -1,0 +1,19 @@
+{
+  "name": "txn-spam",
+  "version": "1.0.0",
+  "description": "Multi-threaded transaction spam",
+  "main": "dist/index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "tsc && node dist/index.js",
+    "format": "tsc && prettier --write 'src/**/*.ts'"
+  },
+  "author": "Julian Wilson",
+  "license": "ISC",
+  "dependencies": {
+    "@types/node": "^16.11.12",
+    "ethers": "^5.5.2",
+    "prettier": "^2.5.1",
+    "typescript": "^4.5.3"
+  }
+}
