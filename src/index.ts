@@ -8,7 +8,7 @@ import { erc20TransferLoop } from "./modes/erc20_transfer";
 import { Mode } from "./types";
 
 const minimumBalance = parseEther("10");
-const spamContractAddress = "0xc33875F3d4bb688185316f7335daa90849F795A4";
+const spamContractAddress = "0x0793f607bf85099fa0f75AD55494FEE8d3691DF8";
 
 async function main() {
   let mode = Mode.Transfer;
