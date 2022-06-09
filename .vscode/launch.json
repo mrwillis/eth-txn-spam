@@ -1,0 +1,19 @@
+{
+    "configurations": [
+        {
+            "name": "Launch Program",
+            "program": "${workspaceFolder}/dist/index.js",
+            "request": "launch",
+            "skipFiles": [
+                "<node_internals>/**"
+            ],
+            "type": "node",
+            "env": {
+                "RANGE": "10",
+                "MODE": "0",
+                "CONFIG_DATA_PATH": "~/borv3",
+                "MNEMONIC": "talent loud rookie struggle human deal stumble whale fetch brown patrol tape ribbon wonder monster"
+            },
+        } 
+    ]
+}

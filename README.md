@@ -1,27 +1,28 @@
 # txn-spam 
-
-This is a stress test script you can run against EVM-compatible nodes (geth, polygon-sdk, parity). It will spam various kinds of transactions from multiple base mnemonics and all their child accounts.
+This is a stress test script you can run against borv3. It will spam various kinds of transactions from multiple base mnemonics and all their child accounts.
 
 Ensure you have at least 12 cores if you want to spam from more than 3-4 base mnemonics at once. Ideally 16 cores, otherwise your machine will be the limiting factor and you might not spam as many transactions as you would hope for. 
 
 
 # Setup
 
-Build image if not already:
+[Optional]:
+    - Make a file `mnemonics` in this repo and populate it with 12 word mnemonics, one for each line. Fund the base accounts for each mnemonic  with a bunch of ETH. You can use https://iancoleman.io/bip39/ to generate mnemonics and derive the base account. 
 
-`docker build . -t txn-spam`
-
-Deploy `Greeter.json` onto your chain and set that address in `spamContractAddress` in `index.ts`
-
-Make a file `mnemonics` in this repo and populate it with 12 word mnemonics, one for each line. Fund the base accounts for each mnemonic with a bunch of ETH. You can use https://iancoleman.io/bip39/ to generate mnemonics and derive the base account. 
-
-The script will top up the child accounts to 10 ETH if they are under it, so make sure the base accounts have at least `10 ETH * RANGE` (see below) on your first run.
+All the actions are done with three bash scripts `init.sh`, `start.sh` and `stop.sh`:
+  - `init.sh` - initializes and/or starts bor instances before we can do actual spamming
+      Execute `$ ./init.sh` to see all the commands and options from this init tool
+      Basic/necessary commands are:
+        `$ ./init.sh setup-bor <bor-path>` initialize account and genesis (by default) into `~/borv3/test-dir-`
+        `$ ./init.sh start-bor <bor-path>` starts bor instances (by default 5). Run this command in separate cmd. Close all instances with ctrl+C
+            `$ ./init.sh start-bor <bor-path> -l <log-path>` like the command above but also logs into `log-path` directory.
+        `$ ./init.sh setup-txn` builds docker, upload contract
 
 # Usage
 
 Run script with four arguments
 
-`bash start.sh [RPC_URL] [PARALLELISM] [RANGE] [MODE]`
+`$ ./start.sh 2 100 0` starts actual test
 
 - `RPC_URL` is the RPC URL of the node you wish to target
 - `PARALLELISM` is the amount of individual processes you want to run
@@ -34,15 +35,15 @@ Run script with four arguments
 
 You shouldn't have to top up the gas frequently as it is hard-coded to send all transactions with 1 gwei. Moreover, mode 0 essentially just sends money back and forth between accounts. 
 
-Starting
-
-`bash start.sh https://rpc.toronto.sx.technology 2 100 0`
-
 *Note that there is some startup time for the script to distribute $ if necessary to its sub accounts*
 
 Stopping:
 
 `bash stop.sh`
+
+# Without docker
+`$ npm run compile && env RANGE=100 MODE=0 CONFIG_DATA_PATH=~/borv3 node ./dist/index.js`
+
 
 
 
