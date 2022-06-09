@@ -1,13 +1,15 @@
 import { JsonRpcProvider } from "@ethersproject/providers";
-import { Contract, Wallet } from "ethers";
-import { parseUnits } from "ethers/lib/utils";
+import { BigNumber, Contract, Wallet } from "ethers";
 import Greeter from "../Greeter.json";
+
+const gasLimit = BigNumber.from(500_000);
 
 export async function erc20TransferLoop(
   mnemonic: string,
   index: number,
   rpcUrl: string,
-  contractAddress: string
+  contractAddress: string,
+  gasPrice: BigNumber
 ) {
   const wallet = Wallet.fromMnemonic(
     mnemonic,
@@ -21,8 +23,8 @@ export async function erc20TransferLoop(
     );
     await contract.simulateErc20Transfer({
       nonce,
-      gasLimit: 500000,
-      gasPrice: parseUnits("1", "gwei"),
+      gasLimit: gasLimit,
+      gasPrice: gasPrice,
     });
     nonce = nonce + 1;
   }

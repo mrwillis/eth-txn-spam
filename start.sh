@@ -1,6 +1,6 @@
 trap "pkill -P $$" SIGINT SIGTERM EXIT
 
-RPC_URL=$1
+#RPC_URL=$1
 PARALLELISM=$2
 RANGE=$3
 MODE=$4
@@ -13,7 +13,8 @@ COUNT=0
 for MNEMONIC in "${mnemonics[@]}"
 do
     echo Starting run script with \"$MNEMONIC\"
-    docker run --detach -e RPC_URL=$RPC_URL -e RANGE=$RANGE -e MNEMONIC="$MNEMONIC" -e MODE="$MODE" txn-spam:latest
+    # -e RPC_URL=$RPC_URL
+    docker run --detach -e RANGE=$RANGE -e MNEMONIC="$MNEMONIC" -e MODE="$MODE" txn-spam:latest
     ((COUNT=COUNT+1))
     echo $COUNT
     if [ "$COUNT" -ge "$PARALLELISM" ]; then

@@ -1,12 +1,14 @@
 import { JsonRpcProvider } from "@ethersproject/providers";
-import { Contract, ContractFactory, Wallet } from "ethers";
-import { parseUnits } from "ethers/lib/utils";
+import { BigNumber, ContractFactory, Wallet } from "ethers";
 import Greeter from "../Greeter.json";
+
+const gasLimit = BigNumber.from(500_000);
 
 export async function contractDeployLoop(
   mnemonic: string,
   index: number,
-  rpcUrl: string
+  rpcUrl: string,
+  gasPrice: BigNumber
 ) {
   const wallet = Wallet.fromMnemonic(
     mnemonic,
@@ -20,8 +22,8 @@ export async function contractDeployLoop(
     );
     await factory.deploy({
       nonce,
-      gasLimit: 500000,
-      gasPrice: parseUnits("1", "gwei"),
+      gasLimit: gasLimit,
+      gasPrice: gasPrice,
     });
     nonce = nonce + 1;
   }

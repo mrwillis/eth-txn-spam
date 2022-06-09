@@ -1,0 +1,25 @@
+{
+    "configurations": [
+        {
+            "name": "Launch via NPM",
+            "request": "launch",
+            "runtimeVersion": "16.15.1", 
+            "runtimeArgs": [
+                "run-script",
+                "start"
+            ],
+            "runtimeExecutable": "npm",
+            "skipFiles": [
+                "<node_internals>/**"
+            ],
+            "type": "node",
+            "env": {
+                "RPC_URL": "http://localhost:12001",
+                "RANGE": "10",
+                "PARALLELISM": "2",
+                "MODE": "0",
+                "MNEMONIC": "nurse fever helmet distance work option fringe merit attend kangaroo glass manual rocket eagle hollow"
+            },
+        }    
+    ]
+}
