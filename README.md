@@ -1,22 +1,23 @@
 # txn-spam 
-This is a stress test script you can run against borv3. It will spam various kinds of transactions from multiple base mnemonics and all their child accounts.
+This is a stress test script you can run against v3. It will spam various kinds of transactions from multiple base mnemonics and all their child accounts.
 
 Ensure you have at least 12 cores if you want to spam from more than 3-4 base mnemonics at once. Ideally 16 cores, otherwise your machine will be the limiting factor and you might not spam as many transactions as you would hope for. 
-
 
 # Setup
 
 [Optional]:
-    - Make a file `mnemonics` in this repo and populate it with 12 word mnemonics, one for each line. Fund the base accounts for each mnemonic  with a bunch of ETH. You can use https://iancoleman.io/bip39/ to generate mnemonics and derive the base account. 
+    Make a file `mnemonics` in this repo and populate it with 12 word mnemonics, one for each line. Fund the base accounts for each mnemonic  with a bunch of ETH. You can use https://iancoleman.io/bip39/ to generate mnemonics and derive the base account. 
 
-All the actions are done with three bash scripts `init.sh`, `start.sh` and `stop.sh`:
-  - `init.sh` - initializes and/or starts bor instances before we can do actual spamming
-      Execute `$ ./init.sh` to see all the commands and options from this init tool
-      Basic/necessary commands are:
-        `$ ./init.sh setup-bor <bor-path>` initialize account and genesis (by default) into `~/borv3/test-dir-`
-        `$ ./init.sh start-bor <bor-path>` starts bor instances (by default 5). Run this command in separate cmd. Close all instances with ctrl+C
-            `$ ./init.sh start-bor <bor-path> -l <log-path>` like the command above but also logs into `log-path` directory.
-        `$ ./init.sh setup-txn` builds docker, upload contract
+`$ ./init.sh` - initializes and/or starts v3 instances before we can do actual spamming
+  - `$ ./init.sh --help` to see all the commands and options
+  - `$ ./init.sh setup <v3-src-path>` creates main spam account and validator accounts, config.json, genesis file. premines main spam account
+  - `$ ./init.sh start <v3-src-path> [-l <log-path>]` starts v3 instances - for each validator one. Run this command in separate cmd. Close all instances with ctrl+C
+  - `$ ./init.sh docker` creates docker image and deploys smart contract to v3 instance
+
+`config.json` is a configuration for txn spam. By default it is saved to the `~/borv3` directory. it has properties:
+  - `privateKey` private key for main txn spam account
+  - `spamContractAddress` address of smart contract used for modes 1 and 2
+  - `rpcUrl` rpc url of v3 instance we want to spam
 
 # Usage
 
@@ -39,7 +40,7 @@ You shouldn't have to top up the gas frequently as it is hard-coded to send all 
 
 Stopping:
 
-`bash stop.sh`
+`$ ./stop.sh`
 
 # Without docker
 `$ npm run compile && env RANGE=100 MODE=0 CONFIG_DATA_PATH=~/borv3 node ./dist/index.js`

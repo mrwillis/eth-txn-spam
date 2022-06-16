@@ -15,7 +15,7 @@ function createAccount(options: any) {
     console.log("Sending wallet address: " + wallet.address);
 }
 
-async function createAccountAndInitBor(borPath: string, options: any) {
+async function setup(borPath: string, options: any) {
     borPath = resolveHome(borPath);
     const premineAmount = parseEther(1_000_000 + '').toHexString()  // amount of matics we want to premine
     const dataDirPath = resolveHome(options.dataDirPath);
@@ -32,7 +32,7 @@ async function createAccountAndInitBor(borPath: string, options: any) {
     const wallet = Wallet.createRandom();
     Config.init(wallet.privateKey, "", "").save(options.configPath);
     const premineAddress = wallet.address
-    console.log('Config file created: ' + options.configPath);
+    console.log('Config file created: ' + pathJoin(resolveHome(options.configPath), 'config.json'));
     console.log("Sending wallet address: " + premineAddress);
     
     const initialDirectory = currentWorkingDirectory();
@@ -66,7 +66,7 @@ async function createAccountAndInitBor(borPath: string, options: any) {
     changeDirectory(initialDirectory);
 }
 
-async function setupTxnSpam(options: any) {
+async function docker(options: any) {
     // deploy contract
     console.log('Deploy contract...');    
     Config.load(options.configPath);
@@ -90,7 +90,7 @@ async function setupTxnSpam(options: any) {
     }
 }
 
-async function startBors(borPath: string, options: any) {
+async function startInstances(borPath: string, options: any) {
     borPath = resolveHome(borPath);
     const logPath = resolveHome(options.logPath || '');
     const dataDirPath = resolveHome(options.dataDirPath);
@@ -154,40 +154,40 @@ function myParseInt(value: string, _: any): number {
 const program = new Command();
 
 program
-  .name('init-txn-spam')
-  .description('txn spam bor v3 initialization util')
-  .version('0.8.0');
+  .name('v3-txn-spam-init')
+  .description('v3 txn spam initialization util')
+  .version('0.8.1');
 
 program.command('create-account')
-  .description('create account and initial config.json')
+  .description('creates main spam account and config.json')
   .option('-c, --config-path <config-path>', 'config path', '~/borv3')
   .action(options => createAccount(options))
 
-program.command('setup-bor <bor-path>')
-  .description('setup bor: create accounts, initialize genesis file, premine address')
+program.command('setup <v3-src-path>')
+  .description('creates main spam account and validator accounts, genesis file, config.json. premines main spam account')
   .option('-d, --data-dir-path <data-dir-path>', 'data dir path', '~/borv3')
   .option('-n, --data-dir-name <data-dir-name>', 'data dir name', 'test-dir-')
   .option('-c, --config-path <config-path>', 'config path', '~/borv3')
-  .option<number>('-v, --validator-cnt <validator-cnt>', 'count of validators', myParseInt, 5)
-  .action((borPath, options) => createAccountAndInitBor(borPath, options)
+  .option<number>('-v, --validator-cnt <validator-cnt>', 'count of validators', myParseInt, 3)
+  .action((borPath, options) => setup(borPath, options)
                                   .then(() => console.log("Done"))
                                   .catch((err) => console.error(err)));
 
-program.command('start-bor <bor-path>')
-  .description('start n instances of a bor')
+program.command('start <v3-src-path>')
+  .description('starts v3 instances - for each validator one')
   .option('-d, --data-dir-path <data-dir-path>', 'data dir path', '~/borv3')
   .option('-n, --data-dir-name <data-dir-name>', 'data dir name', 'test-dir-')
   .option('-c, --config-path <config-path>', 'config path', '~/borv3')
   .option<number>('-rpc, --rpc-port <rpc-port>', 'port for rpc', myParseInt, 12001)
   .option('-l, --log-path <log-path>', 'log name', '')
-  .action((borPath, options) => startBors(borPath, options)
+  .action((borPath, options) => startInstances(borPath, options)
                                   .then(() => console.log("Done"))
                                   .catch((err) => console.error(err)));
 
-program.command('setup-txn')
-    .description('setup txn spam')
+program.command('docker')
+    .description('creates docker image and deploys smart contract to v3 instance')
     .option('-c, --config-path <config-path>', 'config path', '~/borv3')
-    .action(options => setupTxnSpam(options)
+    .action(options => docker(options)
                   .then(() => console.log("Done"))
                   .catch((err) => console.error(err)));
 
