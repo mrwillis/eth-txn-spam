@@ -15,6 +15,12 @@ function createAccount(options: any) {
     console.log("Sending wallet address: " + wallet.address);
 }
 
+function showAccountAddress(options: any) {
+    Config.load(options.configPath);
+    const wallet = new Wallet(Config.data.privateKey)
+    console.log("Wallet address: " + wallet.address);
+}
+
 async function setup(borPath: string, options: any) {
     borPath = resolveHome(borPath);
     const premineAmount = parseEther(1_000_000 + '').toHexString()  // amount of matics we want to premine
@@ -162,6 +168,11 @@ program.command('create-account')
   .description('creates main spam account and config.json')
   .option('-c, --config-path <config-path>', 'config path', '~/borv3')
   .action(options => createAccount(options))
+
+program.command('show-account-address')
+  .description('prints main account address')
+  .option('-c, --config-path <config-path>', 'config path', '~/borv3')
+  .action(options => showAccountAddress(options))
 
 program.command('setup <v3-src-path>')
   .description('creates main spam account and validator accounts, genesis file, config.json. premines main spam account')
