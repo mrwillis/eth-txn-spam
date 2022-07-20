@@ -131,8 +131,8 @@ export const Config = {
     fromString: function (str: string) {
         this.data = JSON.parse(str) as ConfigData;
     },
-    load: function(path: string) {
-        const fpath = pathJoin(resolveHome(path), 'config.json');
+    load: function() {
+        const fpath = 'config.json';
         if (!fs.existsSync(fpath)) {
             throw `Config file does not exist: ${fpath}`;
         }
@@ -140,14 +140,9 @@ export const Config = {
         const js = JSON.parse(buffer.toString());
         this.data = js as ConfigData;
     },
-    save: function(path: string) {
-        path = resolveHome(path)
-        if (!fs.existsSync(path)){
-            fs.mkdirSync(path, { recursive: true });
-        }        
-        
+    save: function() {
         const data = JSON.stringify(this.data)
-        const fpath = pathJoin(path, 'config.json');
+        const fpath = './config.json';
         fs.writeFileSync(fpath, data);
     },
     init: function(pk: string, address: string, rpcUrl: string) {
@@ -176,13 +171,6 @@ export const startcmd = async function(cmd: string): Promise<[boolean, string, s
     } catch {
         return [false, "", ""];
     }
-}
-
-export const resolveHome = function (filepath: string): string {
-    if (!filepath || filepath[0] !== '~') {
-        return filepath
-    }
-    return pathJoin(process.env.HOME!, filepath.slice(1));
 }
 
 export const getGasPrice = function(rpcUrl: string): Promise<BigNumber> {

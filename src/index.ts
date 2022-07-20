@@ -21,7 +21,7 @@ async function main() {
     if (!!configDataJson) {
         Config.fromString(configDataJson!);
     } else {
-        Config.load(configDataPath!);
+        Config.load();
     }
     
     const rpcUrl = Config.data.rpcUrl;
