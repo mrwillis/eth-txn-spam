@@ -10,8 +10,7 @@ Ensure you have at least 12 cores if you want to spam from more than 3-4 base mn
 
 `$ ./init.sh` - initializes and/or starts v3 instances before we can do actual spamming
   - `$ ./init.sh --help` to see all the commands and options
-  - `$ ./init.sh setup <v3-src-path>` creates main spam account and validator accounts, config.json, genesis file. premines main spam account
-  - `$ ./init.sh start <v3-src-path> [-l <log-path>]` starts v3 instances - for each validator one. Run this command in separate cmd. Close all instances with ctrl+C
+  - `$ ./init.sh setup` creates main spam account, validator accounts and config.json.
   - `$ ./init.sh docker` creates docker image and deploys smart contract to v3 instance
 
 `config.json` is a configuration for txn spam. By default it is saved to the `~/borv3` directory. it has properties:
@@ -43,7 +42,7 @@ Stopping:
 `$ ./stop.sh`
 
 # Without docker
-`$ npm run compile && env RANGE=100 MODE=0 CONFIG_DATA_PATH=~/borv3 node ./dist/index.js`
+`$ npm run compile && env RANGE=100 MODE=0 node ./dist/index.js`
 
 
 

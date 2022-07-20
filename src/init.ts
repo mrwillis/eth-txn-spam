@@ -15,7 +15,8 @@ async function setup(options: any) {
     Config.init(wallet.privateKey, "", options.rpcUrl).save();
     const premineAddress = wallet.address
     console.log('Config file created: config.json');
-    console.log("Sending wallet address: " + premineAddress);
+    console.log("You can now premine or fund this account with at least 0xd3c21bcecceda1000000: " + premineAddress);
+    console.log("After that, you can deploy the contract and build the docker image: ./init.sh docker");
 }
 
 async function docker(options: any) {
