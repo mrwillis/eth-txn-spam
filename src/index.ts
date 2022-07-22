@@ -37,9 +37,15 @@ async function main() {
     if (doesModeNeedContract(mode) && !spamContractAddress) {
         // deploy contract if not deployed and it is needed
         spamContractAddress = await wallets.initialContractDeploy(gasPrice);
+        console.log('Contract deployed: ' + spamContractAddress);
         hasChanges = true;
     }
     
+    if (hasChanges) {
+        console.log('Sleep some time in order to wait for transactions to be included in block')
+        await sleep(waitForBlock);
+    }
+
     const walletsUpdated = await wallets.distributeNativeCurrencyIfNecessary(gasPrice)
     hasChanges ||= walletsUpdated;
     
