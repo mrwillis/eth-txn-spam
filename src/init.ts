@@ -58,7 +58,6 @@ program
 
 program.command('show-account-address')
   .description('prints main account address')
-  .option('-c, --config-path <config-path>', 'config path', '~/borv3')
   .action(options => showAccountAddress(options))
 
 program.command('setup')
@@ -70,7 +69,6 @@ program.command('setup')
 
 program.command('docker')
     .description('creates docker image and deploys smart contract to v3 instance')
-    .option('-c, --config-path <config-path>', 'config path', '~/borv3')
     .action(options => docker(options)
                   .then(() => console.log("Done"))
                   .catch((err) => console.error(err)));
