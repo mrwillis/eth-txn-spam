@@ -1,21 +1,29 @@
 trap "pkill -P $$" SIGINT SIGTERM EXIT
 
-RPC_URL=$1
-PARALLELISM=$2
-RANGE=$3
-MODE=$4
+PARALLELISM=$1
+RANGE=$2
+MODE=$3
+CONFIG_DATA_JSON=$(<./config.json)
 
-readarray -t mnemonics < ./mnemonics
+if [[ -f "./mnemonics" ]]; then
+    readarray -t mnemonics < ./mnemonics
+else 
+    mnemonics=("")
+    for (( c=2; c<=$PARALLELISM; c++ ))
+    do 
+        mnemonics+=("")
+    done
+fi
 
 COUNT=0
 
 # https://stackoverflow.com/questions/9084257/bash-array-with-spaces-in-elements
 for MNEMONIC in "${mnemonics[@]}"
 do
-    echo Starting run script with \"$MNEMONIC\"
-    docker run --detach -e RPC_URL=$RPC_URL -e RANGE=$RANGE -e MNEMONIC="$MNEMONIC" -e MODE="$MODE" txn-spam:latest
+    echo Starting run script with \"$MNEMONIC\" $COUNT
+    # does not work --add-host=host.docker.internal:host-gateway
+    docker run --detach -e RANGE=$RANGE -e MNEMONIC="$MNEMONIC" -e MODE="$MODE" -e CONFIG_DATA_JSON="$CONFIG_DATA_JSON" txn-spam:latest
     ((COUNT=COUNT+1))
-    echo $COUNT
     if [ "$COUNT" -ge "$PARALLELISM" ]; then
         break;
     fi
